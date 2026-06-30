@@ -4,6 +4,7 @@ import com.sportsmeet.entity.Registration;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface RegistrationMapper {
@@ -16,4 +17,5 @@ public interface RegistrationMapper {
     List<Registration> findByEventId(Long eventId);
     int countTotal();
     int countByEventId(Long eventId);
+    List<Map<String, Object>> countByDept();
 }

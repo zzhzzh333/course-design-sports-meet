@@ -153,5 +153,38 @@
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/chart.umd.min.js}"></script>
     <script th:src="@{/js/app.js}"></script>
+    <script th:inline="javascript" layout:fragment="scripts">
+        (function() {
+            var canvas = document.getElementById('deptChart');
+            if (!canvas) return;
+            var dist = /*[[${deptDistribution}]]*/ [];
+            if (!dist || dist.length === 0) {
+                canvas.parentElement.innerHTML = '<div class="text-center text-muted py-5"><i class="fa-solid fa-chart-pie fa-2x d-block mb-2"></i>暂无报名数据</div>';
+                return;
+            }
+            var labels = dist.map(function(d) { return d.deptName || '未知'; });
+            var data = dist.map(function(d) { return d.regCount || 0; });
+            var colors = ['#2563eb', '#16a34a', '#ea580c', '#9333ea', '#0891b2', '#dc2626', '#ca8a04', '#0d9488'];
+            new Chart(canvas, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, data.length),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 10 } }
+                    }
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

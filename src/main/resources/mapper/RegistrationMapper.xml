@@ -46,4 +46,12 @@
     <select id="countByEventId" resultType="int">
         SELECT COUNT(*) FROM registration WHERE event_id = #{eventId}
     </select>
+    <select id="countByDept" resultType="java.util.Map">
+        SELECT d.name AS deptName, COUNT(r.id) AS regCount
+        FROM registration r
+        LEFT JOIN athlete a ON r.athlete_id = a.id
+        LEFT JOIN department d ON a.dept_id = d.id
+        GROUP BY d.id, d.name
+        ORDER BY regCount DESC
+    </select>
 </mapper>

@@ -24,6 +24,7 @@ public class DashboardController {
         model.addAttribute("upcomingEvents", summary.get("upcomingEvents"));
         model.addAttribute("endedWithoutScores", summary.get("endedWithoutScores"));
         model.addAttribute("pendingScoreCount", summary.get("pendingScoreCount"));
+        model.addAttribute("deptDistribution", summary.get("deptDistribution"));
         return "dashboard";
     }
 }

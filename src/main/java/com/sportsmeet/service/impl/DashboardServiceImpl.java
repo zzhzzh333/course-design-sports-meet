@@ -1,6 +1,7 @@
 package com.sportsmeet.service.impl;
 
 import com.sportsmeet.entity.Event;
+import com.sportsmeet.mapper.RegistrationMapper;
 import com.sportsmeet.service.AthleteService;
 import com.sportsmeet.service.DashboardService;
 import com.sportsmeet.service.EventService;
@@ -16,11 +17,13 @@ public class DashboardServiceImpl implements DashboardService {
     private final EventService eventService;
     private final AthleteService athleteService;
     private final RegistrationService registrationService;
+    private final RegistrationMapper registrationMapper;
 
-    public DashboardServiceImpl(EventService eventService, AthleteService athleteService, RegistrationService registrationService) {
+    public DashboardServiceImpl(EventService eventService, AthleteService athleteService, RegistrationService registrationService, RegistrationMapper registrationMapper) {
         this.eventService = eventService;
         this.athleteService = athleteService;
         this.registrationService = registrationService;
+        this.registrationMapper = registrationMapper;
     }
 
     @Override
@@ -35,6 +38,7 @@ public class DashboardServiceImpl implements DashboardService {
         List<Event> endedWithoutScores = eventService.findEndedWithoutScores();
         summary.put("endedWithoutScores", endedWithoutScores);
         summary.put("pendingScoreCount", endedWithoutScores.size());
+        summary.put("deptDistribution", registrationMapper.countByDept());
         return summary;
     }
 }

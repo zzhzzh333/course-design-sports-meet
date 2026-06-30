@@ -1,6 +1,7 @@
 package com.sportsmeet.controller;
 
 import com.sportsmeet.common.SecurityValidator;
+import com.sportsmeet.entity.Event;
 import com.sportsmeet.service.AthleteService;
 import com.sportsmeet.service.EventService;
 import com.sportsmeet.service.RegistrationService;
@@ -8,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/registration")
@@ -39,7 +43,10 @@ public class RegistrationController {
     @GetMapping("/add")
     public String addPage(Model model) {
         model.addAttribute("athletes", athleteService.findAll(null, null));
-        model.addAttribute("events", eventService.findAll(null, null));
+        List<Event> availableEvents = eventService.findAll(null, null).stream()
+                .filter(e -> e.getStatus() != 2)
+                .collect(Collectors.toList());
+        model.addAttribute("events", availableEvents);
         return "registration/add";
     }
 
