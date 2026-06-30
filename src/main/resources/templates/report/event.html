@@ -121,7 +121,7 @@
         document.getElementById('btn-search').addEventListener('click', function() {
             var eventId = document.getElementById('select-event').value;
             if (eventId) {
-                window.location.href = '/report/event?eventId=' + encodeURIComponent(eventId);
+                window.location.href = /*[[@{/report/event}]]*/ '/report/event' + '?eventId=' + encodeURIComponent(eventId);
             }
         });
     </script>

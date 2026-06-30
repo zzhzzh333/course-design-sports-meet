@@ -16,6 +16,7 @@ public class Score {
     private String deptName;
     private String eventName;
     private String athleteStudentNo;
+    private String eventCategory;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -41,4 +42,6 @@ public class Score {
     public void setEventName(String eventName) { this.eventName = eventName; }
     public String getAthleteStudentNo() { return athleteStudentNo; }
     public void setAthleteStudentNo(String athleteStudentNo) { this.athleteStudentNo = athleteStudentNo; }
+    public String getEventCategory() { return eventCategory; }
+    public void setEventCategory(String eventCategory) { this.eventCategory = eventCategory; }
 }

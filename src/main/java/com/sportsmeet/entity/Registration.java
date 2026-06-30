@@ -12,6 +12,7 @@ public class Registration {
 
     private String athleteName;
     private String athleteStudentNo;
+    private String athleteGender;
     private String deptName;
     private String eventName;
     private String eventCategory;
@@ -32,6 +33,8 @@ public class Registration {
     public void setAthleteName(String athleteName) { this.athleteName = athleteName; }
     public String getAthleteStudentNo() { return athleteStudentNo; }
     public void setAthleteStudentNo(String athleteStudentNo) { this.athleteStudentNo = athleteStudentNo; }
+    public String getAthleteGender() { return athleteGender; }
+    public void setAthleteGender(String athleteGender) { this.athleteGender = athleteGender; }
     public String getDeptName() { return deptName; }
     public void setDeptName(String deptName) { this.deptName = deptName; }
     public String getEventName() { return eventName; }

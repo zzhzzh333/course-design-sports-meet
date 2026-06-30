@@ -3,7 +3,8 @@
 <mapper namespace="com.sportsmeet.mapper.RegistrationMapper">
     <sql id="selectWithJoin">
         SELECT r.*, a.name AS athlete_name, a.student_no AS athlete_student_no,
-               d.name AS dept_name, e.name AS event_name, e.category AS event_category
+               a.gender AS athlete_gender, d.name AS dept_name,
+               e.name AS event_name, e.category AS event_category
         FROM registration r
         LEFT JOIN athlete a ON r.athlete_id = a.id
         LEFT JOIN department d ON a.dept_id = d.id

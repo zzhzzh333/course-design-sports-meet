@@ -14,20 +14,20 @@
     <div layout:fragment="content">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
-                <div class="row g-3 align-items-end">
+                <form th:action="@{/athlete/list}" method="get" class="row g-3 align-items-end">
                     <div class="col-md-3">
                         <label class="form-label small fw-semibold text-muted">所属院系</label>
-                        <select class="form-select" id="select-dept">
+                        <select class="form-select" id="select-dept" name="deptId">
                             <option value="">全部</option>
-                            <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}">计算机学院</option>
+                            <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}" th:selected="${deptId == dept.id}">计算机学院</option>
                         </select>
                     </div>
                     <div class="col-md-5">
                         <label class="form-label small fw-semibold text-muted">关键词搜索</label>
-                        <input type="text" class="form-control" id="input-search" placeholder="输入学号或姓名搜索...">
+                        <input type="text" class="form-control" id="input-search" name="keyword" th:value="${keyword}" placeholder="输入学号或姓名搜索...">
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary w-100" id="btn-search">
+                        <button class="btn btn-primary w-100" id="btn-search" type="submit">
                             <i class="fa-solid fa-magnifying-glass me-1"></i>搜索
                         </button>
                     </div>
@@ -36,7 +36,7 @@
                             <i class="fa-solid fa-plus me-1"></i>新增运动员
                         </a>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 
@@ -45,7 +45,7 @@
                 <h5 class="card-title mb-0 fw-bold">
                     <i class="fa-solid fa-list-ul text-primary me-2"></i>运动员列表
                 </h5>
-                <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.isEmpty(athleteList) ? '0' : #lists.size(athleteList)} + ' 名运动员'">0 名运动员</span>
+                <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.isEmpty(athletes) ? '0' : #lists.size(athletes)} + ' 名运动员'">0 名运动员</span>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -62,7 +62,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="athlete, iterStat : ${athleteList}" th:data-id="${athlete.id}" th:if="${not #lists.isEmpty(athleteList)}">
+                            <tr th:each="athlete, iterStat : ${athletes}" th:data-id="${athlete.id}" th:if="${not #lists.isEmpty(athletes)}">
                                 <td class="ps-4 text-muted" th:text="${iterStat.index + 1}">1</td>
                                 <td class="fw-semibold" th:text="${athlete.studentNo}">2024001</td>
                                 <td th:text="${athlete.name}">张三</td>
@@ -80,7 +80,7 @@
                                     </a>
                                 </td>
                             </tr>
-                            <tr th:unless="${not #lists.isEmpty(athleteList)}">
+                            <tr th:unless="${not #lists.isEmpty(athletes)}">
                                 <td colspan="7" class="text-center text-muted py-5">
                                     <i class="fa-solid fa-inbox fa-3x d-block mb-3"></i>暂无运动员数据
                                 </td>

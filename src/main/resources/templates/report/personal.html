@@ -54,7 +54,7 @@
                                 <tr th:each="score, iterStat : ${scores}">
                                     <td class="ps-4 fw-semibold" th:text="${score.eventName}">100米短跑</td>
                                     <td>
-                                        <span class="badge bg-primary bg-opacity-10 text-primary" th:text="${score.category}">男子</span>
+                                        <span class="badge bg-primary bg-opacity-10 text-primary" th:text="${score.eventCategory}">男子</span>
                                     </td>
                                     <td>
                                         <span th:if="${score.rank == 1}" class="badge bg-warning text-dark fs-6">

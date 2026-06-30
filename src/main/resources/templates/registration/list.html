@@ -14,20 +14,20 @@
     <div layout:fragment="content">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
-                <div class="row g-3 align-items-end">
+                <form th:action="@{/registration/list}" method="get" class="row g-3 align-items-end">
                     <div class="col-md-3">
                         <label class="form-label small fw-semibold text-muted">报名项目</label>
-                        <select class="form-select" id="select-event">
+                        <select class="form-select" id="select-event" name="eventId">
                             <option value="">全部</option>
                             <option th:each="event : ${events}" th:value="${event.id}" th:text="${event.name}">100米短跑</option>
                         </select>
                     </div>
                     <div class="col-md-5">
                         <label class="form-label small fw-semibold text-muted">关键词搜索</label>
-                        <input type="text" class="form-control" id="input-search" placeholder="输入学号或姓名搜索...">
+                        <input type="text" class="form-control" id="input-search" name="keyword" th:value="${keyword}" placeholder="输入学号或姓名搜索...">
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary w-100" id="btn-search">
+                        <button class="btn btn-primary w-100" id="btn-search" type="submit">
                             <i class="fa-solid fa-magnifying-glass me-1"></i>搜索
                         </button>
                     </div>
@@ -36,7 +36,7 @@
                             <i class="fa-solid fa-plus me-1"></i>新增报名
                         </a>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 
@@ -45,7 +45,7 @@
                 <h5 class="card-title mb-0 fw-bold">
                     <i class="fa-solid fa-list-ul text-primary me-2"></i>报名列表
                 </h5>
-                <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.isEmpty(registrationList) ? '0' : #lists.size(registrationList)} + ' 条报名'">0 条报名</span>
+                <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.isEmpty(registrations) ? '0' : #lists.size(registrations)} + ' 条报名'">0 条报名</span>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -63,10 +63,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="reg, iterStat : ${registrationList}" th:data-id="${reg.id}" th:if="${not #lists.isEmpty(registrationList)}">
+                            <tr th:each="reg, iterStat : ${registrations}" th:data-id="${reg.id}" th:if="${not #lists.isEmpty(registrations)}">
                                 <td class="ps-4 text-muted" th:text="${iterStat.index + 1}">1</td>
                                 <td class="fw-semibold" th:text="${reg.athleteName}">张三</td>
-                                <td th:text="${reg.studentNo}">2024001</td>
+                                <td th:text="${reg.athleteStudentNo}">2024001</td>
                                 <td th:text="${reg.deptName}">计算机学院</td>
                                 <td th:text="${reg.eventName}">100米短跑</td>
                                 <td th:text="${#temporals.format(reg.registerTime, 'yyyy-MM-dd HH:mm')}">2026-07-01 09:00</td>
@@ -79,7 +79,7 @@
                                     </a>
                                 </td>
                             </tr>
-                            <tr th:unless="${not #lists.isEmpty(registrationList)}">
+                            <tr th:unless="${not #lists.isEmpty(registrations)}">
                                 <td colspan="8" class="text-center text-muted py-5">
                                     <i class="fa-solid fa-inbox fa-3x d-block mb-3"></i>暂无报名数据
                                 </td>

@@ -14,22 +14,22 @@
     <div layout:fragment="content">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
-                <div class="row g-3 align-items-end">
+                <form th:action="@{/event/list}" method="get" class="row g-3 align-items-end">
                     <div class="col-md-3">
                         <label class="form-label small fw-semibold text-muted">比赛类别</label>
-                        <select class="form-select" id="filter-category">
+                        <select class="form-select" id="filter-category" name="category">
                             <option value="">全部</option>
-                            <option value="男子">男子</option>
-                            <option value="女子">女子</option>
-                            <option value="混合">混合</option>
+                            <option value="男子" th:selected="${category == '男子'}">男子</option>
+                            <option value="女子" th:selected="${category == '女子'}">女子</option>
+                            <option value="混合" th:selected="${category == '混合'}">混合</option>
                         </select>
                     </div>
                     <div class="col-md-5">
                         <label class="form-label small fw-semibold text-muted">关键词搜索</label>
-                        <input type="text" class="form-control" id="filter-keyword" placeholder="输入项目名称或地点搜索...">
+                        <input type="text" class="form-control" id="filter-keyword" name="keyword" th:value="${keyword}" placeholder="输入项目名称或地点搜索...">
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary w-100" id="btn-search">
+                        <button class="btn btn-primary w-100" id="btn-search" type="submit">
                             <i class="fa-solid fa-magnifying-glass me-1"></i>搜索
                         </button>
                     </div>
@@ -38,7 +38,7 @@
                             <i class="fa-solid fa-plus me-1"></i>新增项目
                         </a>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 
@@ -65,9 +65,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="event, iterStat : ${events}" th:data-id="${event.id}" th:if="${not #lists.isEmpty(events)}">
+                            <th:block th:each="event, iterStat : ${events}" th:if="${not #lists.isEmpty(events)}">
+                            <tr th:data-id="${event.id}" style="cursor:pointer;" onclick="var row=this.nextElementSibling; if(row && row.classList.contains('reg-row')){ row.style.display = row.style.display==='none'?'table-row':'none'; }">
                                 <td class="ps-4 text-muted" th:text="${iterStat.index + 1}">1</td>
-                                <td class="fw-semibold" th:text="${event.name}">100米短跑</td>
+                                <td class="fw-semibold">
+                                    <i class="fa-solid fa-chevron-right text-muted me-1 small"></i>
+                                    <span th:text="${event.name}">100米短跑</span>
+                                </td>
                                 <td>
                                     <span class="badge bg-primary bg-opacity-10 text-primary" th:text="${event.category}">男子</span>
                                 </td>
@@ -77,15 +81,56 @@
                                 <td>
                                     <span class="badge rounded-pill" th:classappend="${event.status == 0} ? 'bg-secondary' : (${event.status == 1} ? 'bg-success' : 'bg-info')" th:text="${event.status == 0} ? '未开始' : (${event.status == 1} ? '进行中' : '已结束')">未开始</span>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" onclick="event.stopPropagation();">
                                     <a th:href="@{/event/edit/{id}(id=${event.id})}" class="btn btn-sm btn-outline-primary me-1">
                                         <i class="fa-solid fa-pen-to-square"></i> 编辑
+                                    </a>
+                                    <a th:if="${event.status != 2}" th:href="@{/event/finish/{id}(id=${event.id})}" class="btn btn-sm btn-outline-warning me-1" onclick="return confirm('确定要结束该比赛吗？结束后将不可再报名。')">
+                                        <i class="fa-solid fa-flag-checkered"></i> 结束
                                     </a>
                                     <a th:href="@{/event/delete/{id}(id=${event.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定要删除该项目吗？此操作不可恢复。')">
                                         <i class="fa-solid fa-trash-can"></i> 删除
                                     </a>
                                 </td>
                             </tr>
+                            <tr class="reg-row" th:if="${regMap.get(event.id) != null}" style="display:none; background-color:#f8fafc;">
+                                <td colspan="8" class="px-4 py-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fa-solid fa-users text-primary me-2"></i>
+                                        <span class="fw-semibold" th:text="'已报名人员（' + ${regMap.get(event.id).size()} + '人）'">已报名人员</span>
+                                    </div>
+                                    <div th:if="${#lists.isEmpty(regMap.get(event.id))}" class="text-muted small">
+                                        <i class="fa-solid fa-circle-info me-1"></i>暂无报名记录
+                                    </div>
+                                    <table th:unless="${#lists.isEmpty(regMap.get(event.id))}" class="table table-sm table-bordered mb-0" style="font-size:0.875rem;">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width:50px;">序号</th>
+                                                <th>学号</th>
+                                                <th>姓名</th>
+                                                <th>性别</th>
+                                                <th>院系</th>
+                                                <th>报名状态</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="reg, idx : ${regMap.get(event.id)}">
+                                                <td th:text="${idx.index + 1}">1</td>
+                                                <td th:text="${reg.athleteStudentNo}">2024001</td>
+                                                <td th:text="${reg.athleteName}">张三</td>
+                                                <td>
+                                                    <span class="badge" th:classappend="${reg.athleteGender == '男'} ? 'bg-primary bg-opacity-10 text-primary' : 'bg-danger bg-opacity-10 text-danger'" th:text="${reg.athleteGender}">男</span>
+                                                </td>
+                                                <td th:text="${reg.deptName}">计算机学院</td>
+                                                <td>
+                                                    <span class="badge" th:classappend="${reg.status == 0} ? 'bg-warning bg-opacity-10 text-warning' : (${reg.status == 1} ? 'bg-primary bg-opacity-10 text-primary' : 'bg-success bg-opacity-10 text-success')" th:text="${reg.status == 0} ? '已报名' : (${reg.status == 1} ? '已参赛' : '已完赛')">已报名</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </th:block>
                             <tr th:unless="${not #lists.isEmpty(events)}">
                                 <td colspan="8" class="text-center text-muted py-5">
                                     <i class="fa-solid fa-inbox fa-3x d-block mb-3"></i>暂无比赛项目数据
