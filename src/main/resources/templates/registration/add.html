@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
+<head>
+    <meta charset="UTF-8">
+    <title>新增报名</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <th:block layout:fragment="page-title">新增报名</th:block>
+    <th:block layout:fragment="breadcrumb">
+        <a th:href="@{/registration/list}">报名管理</a>
+        <span class="separator">/</span>
+        新增报名
+    </th:block>
+
+    <div layout:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0 py-3">
+                        <h5 class="card-title mb-0 fw-bold">
+                            <i class="fa-solid fa-circle-plus text-primary me-2"></i>新增报名
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/registration/register}" method="post">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="select-athlete" class="form-label fw-semibold">运动员 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-athlete" name="athleteId" required>
+                                        <option value="">请选择运动员</option>
+                                        <option th:each="athlete : ${athletes}" th:value="${athlete.id}" th:text="${athlete.name} + ' - ' + ${athlete.studentNo}">张三 - 2024001</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="select-event" class="form-label fw-semibold">报名项目 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-event" name="eventId" required>
+                                        <option value="">请选择比赛项目</option>
+                                        <option th:each="event : ${events}" th:value="${event.id}" th:text="${event.name} + '（' + ${event.category} + '）'">100米短跑（男子）</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
+                                <button type="submit" class="btn btn-primary px-4" id="btn-register">
+                                    <i class="fa-solid fa-check me-1"></i>提交
+                                </button>
+                                <a th:href="@{/registration/list}" class="btn btn-outline-secondary px-4">
+                                    <i class="fa-solid fa-xmark me-1"></i>取消
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

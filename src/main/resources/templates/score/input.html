@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
+<head>
+    <meta charset="UTF-8">
+    <title>成绩录入</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <th:block layout:fragment="page-title">成绩录入</th:block>
+    <th:block layout:fragment="breadcrumb">成绩录入</th:block>
+
+    <div layout:fragment="content">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom-0 py-3 d-flex align-items-center">
+                <h5 class="card-title mb-0 fw-bold">
+                    <i class="fa-solid fa-edit text-primary me-2"></i>选择比赛项目
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label small fw-semibold text-muted" for="select-event">比赛项目</label>
+                        <select class="form-select" id="select-event">
+                            <option value="">-- 请选择项目 --</option>
+                            <th:block th:each="event : ${events}">
+                                <option th:if="${event.status == 1 or event.status == 2}" th:value="${event.id}" th:text="${event.name} + ' [' + ${event.category} + ']'">100米短跑 [男子]</option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" id="btn-select-event" type="button">
+                            <i class="fa-solid fa-check me-1"></i>选择项目
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${selectedEventId != null}" class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom-0 py-3 d-flex align-items-center">
+                <h5 class="card-title mb-0 fw-bold">
+                    <i class="fa-solid fa-pen-to-square text-primary me-2"></i>成绩录入
+                </h5>
+            </div>
+            <div class="card-body text-center py-4">
+                <p class="text-muted mb-3">已选择项目，点击下方按钮进入成绩录入表单</p>
+                <a th:href="@{/score/input/{id}(id=${selectedEventId})}" class="btn btn-primary">
+                    <i class="fa-solid fa-arrow-right me-1"></i>进入录入表单
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+    <script th:inline="javascript">
+        document.getElementById('btn-select-event').addEventListener('click', function() {
+            var eventId = document.getElementById('select-event').value;
+            if (!eventId) {
+                alert('请先选择一个比赛项目');
+                return;
+            }
+            window.location.href = /*[[@{/score/input/}]]*/ '' + eventId;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑项目</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <th:block layout:fragment="page-title">编辑项目</th:block>
+    <th:block layout:fragment="breadcrumb">
+        <a th:href="@{/event/list}">比赛项目管理</a>
+        <span class="separator">/</span>
+        编辑项目
+    </th:block>
+
+    <div layout:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0 py-3">
+                        <h5 class="card-title mb-0 fw-bold">
+                            <i class="fa-solid fa-pen-to-square text-primary me-2"></i>编辑项目
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/event/update}" method="post">
+                            <input type="hidden" name="id" th:value="${event.id}">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label fw-semibold">项目名称 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name" th:value="${event.name}" placeholder="请输入项目名称" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="category" class="form-label fw-semibold">比赛类别 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="category" name="category" required>
+                                        <option value="">请选择类别</option>
+                                        <option value="男子" th:selected="${event.category == '男子'}">男子</option>
+                                        <option value="女子" th:selected="${event.category == '女子'}">女子</option>
+                                        <option value="混合" th:selected="${event.category == '混合'}">混合</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="status" class="form-label fw-semibold">比赛状态 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="status" name="status" required>
+                                        <option value="0" th:selected="${event.status == 0}">0 - 未开始</option>
+                                        <option value="1" th:selected="${event.status == 1}">1 - 进行中</option>
+                                        <option value="2" th:selected="${event.status == 2}">2 - 已结束</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="topN" class="form-label fw-semibold">取前N名</label>
+                                    <input type="number" class="form-control" id="topN" name="topN" th:value="${event.topN}" min="1" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="eventDate" class="form-label fw-semibold">比赛日期 <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="eventDate" name="eventDate" th:value="${#temporals.format(event.eventDate, 'yyyy-MM-dd')}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="eventTime" class="form-label fw-semibold">比赛时间</label>
+                                    <input type="text" class="form-control" id="eventTime" name="eventTime" th:value="${event.eventTime}" placeholder="例如：09:00-11:00">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="location" class="form-label fw-semibold">比赛地点 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="location" name="location" th:value="${event.location}" placeholder="请输入比赛地点" required>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
+                                <button type="submit" class="btn btn-primary px-4" id="btn-submit-event">
+                                    <i class="fa-solid fa-check me-1"></i>保存修改
+                                </button>
+                                <a th:href="@{/event/list}" class="btn btn-outline-secondary px-4">
+                                    <i class="fa-solid fa-xmark me-1"></i>取消
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

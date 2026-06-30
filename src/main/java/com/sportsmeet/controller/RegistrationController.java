@@ -1,0 +1,62 @@
+package com.sportsmeet.controller;
+
+import com.sportsmeet.service.AthleteService;
+import com.sportsmeet.service.EventService;
+import com.sportsmeet.service.RegistrationService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@Controller
+@RequestMapping("/registration")
+public class RegistrationController {
+
+    private final RegistrationService registrationService;
+    private final AthleteService athleteService;
+    private final EventService eventService;
+
+    public RegistrationController(RegistrationService registrationService, AthleteService athleteService, EventService eventService) {
+        this.registrationService = registrationService;
+        this.athleteService = athleteService;
+        this.eventService = eventService;
+    }
+
+    @GetMapping("/list")
+    public String list(@RequestParam(required = false) Long eventId,
+                       @RequestParam(required = false) String keyword,
+                       Model model) {
+        model.addAttribute("registrations", registrationService.findAll(eventId, keyword));
+        model.addAttribute("events", eventService.findAll(null, null));
+        model.addAttribute("eventId", eventId);
+        model.addAttribute("keyword", keyword);
+        return "registration/list";
+    }
+
+    @GetMapping("/add")
+    public String addPage(Model model) {
+        model.addAttribute("athletes", athleteService.findAll(null, null));
+        model.addAttribute("events", eventService.findAll(null, null));
+        return "registration/add";
+    }
+
+    @PostMapping("/register")
+    public String register(@RequestParam Long athleteId,
+                           @RequestParam Long eventId,
+                           RedirectAttributes redirectAttributes) {
+        try {
+            registrationService.register(athleteId, eventId);
+            redirectAttributes.addFlashAttribute("msg", "报名成功");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/registration/list";
+    }
+
+    @GetMapping("/cancel/{id}")
+    public String cancel(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        registrationService.cancel(id);
+        redirectAttributes.addFlashAttribute("msg", "报名已取消");
+        return "redirect:/registration/list";
+    }
+}

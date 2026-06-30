@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sportsmeet.mapper.EventMapper">
+    <select id="findAll" resultType="com.sportsmeet.entity.Event">
+        SELECT * FROM event
+        <where>
+            <if test="category != null and category != ''">
+                AND category = #{category}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY event_date, event_time
+    </select>
+    <select id="findById" resultType="com.sportsmeet.entity.Event">
+        SELECT * FROM event WHERE id = #{id}
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO event (name, category, top_n, event_date, event_time, location, status)
+        VALUES (#{name}, #{category}, #{topN}, #{eventDate}, #{eventTime}, #{location}, #{status})
+    </insert>
+    <update id="update">
+        UPDATE event SET name=#{name}, category=#{category}, top_n=#{topN},
+        event_date=#{eventDate}, event_time=#{eventTime}, location=#{location}, status=#{status}
+        WHERE id=#{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM event WHERE id=#{id}
+    </delete>
+    <select id="countByStatus" resultType="int">
+        SELECT COUNT(*) FROM event WHERE status = #{status}
+    </select>
+    <select id="countTotal" resultType="int">
+        SELECT COUNT(*) FROM event
+    </select>
+    <select id="countRegistrationByEventId" resultType="int">
+        SELECT COUNT(*) FROM registration WHERE event_id = #{eventId}
+    </select>
+    <select id="findUpcoming" resultType="com.sportsmeet.entity.Event">
+        SELECT * FROM event WHERE status = 0 ORDER BY event_date, event_time LIMIT #{limit}
+    </select>
+</mapper>

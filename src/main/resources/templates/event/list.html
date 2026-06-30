@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
+<head>
+    <meta charset="UTF-8">
+    <title>比赛项目管理</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <th:block layout:fragment="page-title">比赛项目管理</th:block>
+    <th:block layout:fragment="breadcrumb">比赛项目管理</th:block>
+
+    <div layout:fragment="content">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-muted">比赛类别</label>
+                        <select class="form-select" id="filter-category">
+                            <option value="">全部</option>
+                            <option value="男子">男子</option>
+                            <option value="女子">女子</option>
+                            <option value="混合">混合</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label small fw-semibold text-muted">关键词搜索</label>
+                        <input type="text" class="form-control" id="filter-keyword" placeholder="输入项目名称或地点搜索...">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" id="btn-search">
+                            <i class="fa-solid fa-magnifying-glass me-1"></i>搜索
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <a th:href="@{/event/add}" class="btn btn-primary w-100" id="btn-add-event">
+                            <i class="fa-solid fa-plus me-1"></i>新增项目
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom-0 py-3 d-flex align-items-center">
+                <h5 class="card-title mb-0 fw-bold">
+                    <i class="fa-solid fa-list-ul text-primary me-2"></i>项目列表
+                </h5>
+                <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.size(events)} + ' 个项目'">0 个项目</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">#</th>
+                                <th>项目名称</th>
+                                <th>类别</th>
+                                <th>比赛日期</th>
+                                <th>比赛时间</th>
+                                <th>地点</th>
+                                <th>状态</th>
+                                <th class="text-center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="event, iterStat : ${events}" th:data-id="${event.id}" th:if="${not #lists.isEmpty(events)}">
+                                <td class="ps-4 text-muted" th:text="${iterStat.index + 1}">1</td>
+                                <td class="fw-semibold" th:text="${event.name}">100米短跑</td>
+                                <td>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary" th:text="${event.category}">男子</span>
+                                </td>
+                                <td th:text="${#temporals.format(event.eventDate, 'yyyy-MM-dd')}">2026-07-01</td>
+                                <td th:text="${event.eventTime}">09:00</td>
+                                <td th:text="${event.location}">田径场</td>
+                                <td>
+                                    <span class="badge rounded-pill" th:classappend="${event.status == 0} ? 'bg-secondary' : (${event.status == 1} ? 'bg-success' : 'bg-info')" th:text="${event.status == 0} ? '未开始' : (${event.status == 1} ? '进行中' : '已结束')">未开始</span>
+                                </td>
+                                <td class="text-center">
+                                    <a th:href="@{/event/edit/{id}(id=${event.id})}" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="fa-solid fa-pen-to-square"></i> 编辑
+                                    </a>
+                                    <a th:href="@{/event/delete/{id}(id=${event.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定要删除该项目吗？此操作不可恢复。')">
+                                        <i class="fa-solid fa-trash-can"></i> 删除
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:unless="${not #lists.isEmpty(events)}">
+                                <td colspan="8" class="text-center text-muted py-5">
+                                    <i class="fa-solid fa-inbox fa-3x d-block mb-3"></i>暂无比赛项目数据
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
+<head>
+    <meta charset="UTF-8">
+    <title>团体总分</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <th:block layout:fragment="page-title">团体总分</th:block>
+    <th:block layout:fragment="breadcrumb">统计报表 / 团体总分</th:block>
+
+    <div layout:fragment="content">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom-0 py-3 d-flex align-items-center">
+                <h5 class="card-title mb-0 fw-bold">
+                    <i class="fa-solid fa-ranking-star text-primary me-2"></i>团体总分排名
+                </h5>
+                <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.isEmpty(teamScores) ? '0' : #lists.size(teamScores)} + ' 个院系'">0 个院系</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" th:if="${not #lists.isEmpty(teamScores)}">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4" style="width: 80px;">排名</th>
+                                <th>院系名称</th>
+                                <th>男子总分</th>
+                                <th>女子总分</th>
+                                <th>团体总分</th>
+                                <th>金牌数</th>
+                                <th>银牌数</th>
+                                <th>铜牌数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="score, iterStat : ${teamScores}">
+                                <td class="ps-4">
+                                    <span th:if="${iterStat.index == 0}" class="badge bg-warning text-dark fs-6">
+                                        <i class="fa-solid fa-medal"></i> 1
+                                    </span>
+                                    <span th:if="${iterStat.index == 1}" class="badge bg-secondary fs-6">
+                                        <i class="fa-solid fa-medal"></i> 2
+                                    </span>
+                                    <span th:if="${iterStat.index == 2}" class="badge bg-warning bg-opacity-50 text-dark fs-6">
+                                        <i class="fa-solid fa-medal"></i> 3
+                                    </span>
+                                    <span th:if="${iterStat.index > 2}" class="fw-semibold text-muted" th:text="${iterStat.index + 1}">4</span>
+                                </td>
+                                <td class="fw-semibold" th:text="${score.deptName}">计算机学院</td>
+                                <td th:text="${score.maleScore}">0</td>
+                                <td th:text="${score.femaleScore}">0</td>
+                                <td>
+                                    <span class="fw-bold text-primary" th:text="${score.totalScore}">0</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning bg-opacity-10 text-warning" th:text="${score.goldCount}">0</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary" th:text="${score.silverCount}">0</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning bg-opacity-10 text-warning" th:text="${score.bronzeCount}">0</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div th:unless="${not #lists.isEmpty(teamScores)}" class="text-center text-muted py-5">
+                        <i class="fa-solid fa-inbox fa-3x d-block mb-3"></i>暂无成绩数据
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

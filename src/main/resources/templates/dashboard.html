@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
+<head>
+    <meta charset="UTF-8">
+    <title>仪表板</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <th:block layout:fragment="page-title">仪表板</th:block>
+    <th:block layout:fragment="breadcrumb">首页</th:block>
+
+    <div layout:fragment="content">
+        <div class="row g-4 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stat-icon bg-primary bg-opacity-10 rounded-3">
+                                <i class="fa-solid fa-trophy text-primary fs-3"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-muted mb-1 small">总项目数</p>
+                                <h3 class="fw-bold mb-0" th:text="${totalEvents}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stat-icon bg-success bg-opacity-10 rounded-3">
+                                <i class="fa-solid fa-running text-success fs-3"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-muted mb-1 small">总运动员数</p>
+                                <h3 class="fw-bold mb-0" th:text="${totalAthletes}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stat-icon bg-warning bg-opacity-10 rounded-3">
+                                <i class="fa-solid fa-clipboard-list text-warning fs-3"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-muted mb-1 small">总报名人次</p>
+                                <h3 class="fw-bold mb-0" th:text="${totalRegistrations}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stat-icon bg-info bg-opacity-10 rounded-3">
+                                <i class="fa-solid fa-check-circle text-info fs-3"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-muted mb-1 small">已完结项目数</p>
+                                <h3 class="fw-bold mb-0" th:text="${finishedEvents}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0 py-3">
+                        <h5 class="card-title mb-0 fw-bold">
+                            <i class="fa-solid fa-calendar-alt text-primary me-2"></i>即将开始的比赛
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">项目名称</th>
+                                        <th>类别</th>
+                                        <th>比赛日期</th>
+                                        <th>比赛时间</th>
+                                        <th>地点</th>
+                                        <th>状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="event : ${upcomingEvents}" th:if="${not #lists.isEmpty(upcomingEvents)}">
+                                        <td class="ps-4 fw-semibold" th:text="${event.name}">100米短跑</td>
+                                        <td>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary" th:text="${event.category}">男子</span>
+                                        </td>
+                                        <td th:text="${#temporals.format(event.eventDate, 'yyyy-MM-dd')}">2026-07-01</td>
+                                        <td th:text="${event.eventTime}">09:00</td>
+                                        <td th:text="${event.location}">田径场</td>
+                                        <td>
+                                            <span class="badge rounded-pill" th:classappend="${event.status == 0} ? 'bg-secondary' : (${event.status == 1} ? 'bg-success' : 'bg-info')" th:text="${event.status == 0} ? '未开始' : (${event.status == 1} ? '进行中' : '已结束')">未开始</span>
+                                        </td>
+                                    </tr>
+                                    <tr th:unless="${not #lists.isEmpty(upcomingEvents)}">
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            <i class="fa-solid fa-inbox fa-2x d-block mb-2"></i>暂无即将开始的比赛
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0 py-3">
+                        <h5 class="card-title mb-0 fw-bold">
+                            <i class="fa-solid fa-chart-pie text-primary me-2"></i>各院系报名分布
+                        </h5>
+                    </div>
+                    <div class="card-body d-flex align-items-center justify-content-center">
+                        <div id="deptChart" style="width: 100%; min-height: 280px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/chart.umd.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

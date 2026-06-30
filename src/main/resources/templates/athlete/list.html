@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
+<head>
+    <meta charset="UTF-8">
+    <title>运动员管理</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <th:block layout:fragment="page-title">运动员管理</th:block>
+    <th:block layout:fragment="breadcrumb">运动员管理</th:block>
+
+    <div layout:fragment="content">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-muted">所属院系</label>
+                        <select class="form-select" id="select-dept">
+                            <option value="">全部</option>
+                            <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}">计算机学院</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label small fw-semibold text-muted">关键词搜索</label>
+                        <input type="text" class="form-control" id="input-search" placeholder="输入学号或姓名搜索...">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" id="btn-search">
+                            <i class="fa-solid fa-magnifying-glass me-1"></i>搜索
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <a th:href="@{/athlete/add}" class="btn btn-primary w-100" id="btn-add-athlete">
+                            <i class="fa-solid fa-plus me-1"></i>新增运动员
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom-0 py-3 d-flex align-items-center">
+                <h5 class="card-title mb-0 fw-bold">
+                    <i class="fa-solid fa-list-ul text-primary me-2"></i>运动员列表
+                </h5>
+                <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.isEmpty(athleteList) ? '0' : #lists.size(athleteList)} + ' 名运动员'">0 名运动员</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">#</th>
+                                <th>学号</th>
+                                <th>姓名</th>
+                                <th>性别</th>
+                                <th>所属院系</th>
+                                <th>联系电话</th>
+                                <th class="text-center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="athlete, iterStat : ${athleteList}" th:data-id="${athlete.id}" th:if="${not #lists.isEmpty(athleteList)}">
+                                <td class="ps-4 text-muted" th:text="${iterStat.index + 1}">1</td>
+                                <td class="fw-semibold" th:text="${athlete.studentNo}">2024001</td>
+                                <td th:text="${athlete.name}">张三</td>
+                                <td>
+                                    <span class="badge" th:classappend="${athlete.gender == '男'} ? 'bg-primary bg-opacity-10 text-primary' : 'bg-danger bg-opacity-10 text-danger'" th:text="${athlete.gender}">男</span>
+                                </td>
+                                <td th:text="${athlete.deptName}">计算机学院</td>
+                                <td th:text="${athlete.phone}">13800138000</td>
+                                <td class="text-center">
+                                    <a th:href="@{/athlete/edit/{id}(id=${athlete.id})}" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="fa-solid fa-pen-to-square"></i> 编辑
+                                    </a>
+                                    <a th:href="@{/athlete/delete/{id}(id=${athlete.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定要删除该运动员吗？此操作不可恢复。')">
+                                        <i class="fa-solid fa-trash-can"></i> 删除
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:unless="${not #lists.isEmpty(athleteList)}">
+                                <td colspan="7" class="text-center text-muted py-5">
+                                    <i class="fa-solid fa-inbox fa-3x d-block mb-3"></i>暂无运动员数据
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

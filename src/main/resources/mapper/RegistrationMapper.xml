@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sportsmeet.mapper.RegistrationMapper">
+    <sql id="selectWithJoin">
+        SELECT r.*, a.name AS athlete_name, a.student_no AS athlete_student_no,
+               d.name AS dept_name, e.name AS event_name, e.category AS event_category
+        FROM registration r
+        LEFT JOIN athlete a ON r.athlete_id = a.id
+        LEFT JOIN department d ON a.dept_id = d.id
+        LEFT JOIN event e ON r.event_id = e.id
+    </sql>
+    <select id="findAll" resultType="com.sportsmeet.entity.Registration">
+        <include refid="selectWithJoin"/>
+        <where>
+            <if test="eventId != null">
+                AND r.event_id = #{eventId}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (a.name LIKE CONCAT('%', #{keyword}, '%') OR a.student_no LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY r.register_time DESC
+    </select>
+    <select id="findByAthleteAndEvent" resultType="com.sportsmeet.entity.Registration">
+        SELECT * FROM registration WHERE athlete_id = #{athleteId} AND event_id = #{eventId}
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO registration (athlete_id, event_id, status) VALUES (#{athleteId}, #{eventId}, #{status})
+    </insert>
+    <delete id="deleteById">
+        DELETE FROM registration WHERE id=#{id}
+    </delete>
+    <update id="updateStatus">
+        UPDATE registration SET status=#{status} WHERE id=#{id}
+    </update>
+    <update id="updateStatusByEvent">
+        UPDATE registration SET status=#{status} WHERE event_id=#{eventId}
+    </update>
+    <select id="findByEventId" resultType="com.sportsmeet.entity.Registration">
+        <include refid="selectWithJoin"/> WHERE r.event_id = #{eventId} ORDER BY a.name
+    </select>
+    <select id="countTotal" resultType="int">
+        SELECT COUNT(*) FROM registration
+    </select>
+    <select id="countByEventId" resultType="int">
+        SELECT COUNT(*) FROM registration WHERE event_id = #{eventId}
+    </select>
+</mapper>

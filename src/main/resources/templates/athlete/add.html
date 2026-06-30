@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
+<head>
+    <meta charset="UTF-8">
+    <title>新增运动员</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <th:block layout:fragment="page-title">新增运动员</th:block>
+    <th:block layout:fragment="breadcrumb">
+        <a th:href="@{/athlete/list}">运动员管理</a>
+        <span class="separator">/</span>
+        新增运动员
+    </th:block>
+
+    <div layout:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom-0 py-3">
+                        <h5 class="card-title mb-0 fw-bold">
+                            <i class="fa-solid fa-circle-plus text-primary me-2"></i>新增运动员
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/athlete/save}" method="post">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="input-student-no" class="form-label fw-semibold">学号 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="input-student-no" name="studentNo" placeholder="请输入学号" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="input-name" class="form-label fw-semibold">姓名 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="input-name" name="name" placeholder="请输入姓名" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="select-gender" class="form-label fw-semibold">性别 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-gender" name="gender" required>
+                                        <option value="">请选择性别</option>
+                                        <option value="男">男</option>
+                                        <option value="女">女</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="select-dept" class="form-label fw-semibold">所属院系 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-dept" name="deptId" required>
+                                        <option value="">请选择院系</option>
+                                        <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}">计算机学院</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="input-phone" class="form-label fw-semibold">联系电话</label>
+                                    <input type="text" class="form-control" id="input-phone" name="phone" placeholder="请输入联系电话">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top">
+                                <button type="submit" class="btn btn-primary px-4" id="btn-submit-athlete">
+                                    <i class="fa-solid fa-check me-1"></i>提交
+                                </button>
+                                <a th:href="@{/athlete/list}" class="btn btn-outline-secondary px-4">
+                                    <i class="fa-solid fa-xmark me-1"></i>取消
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
