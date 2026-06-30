@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
     <div layout:fragment="content">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
-                <form th:action="@{/event/list}" method="get" class="row g-3 align-items-end">
+                <form th:action="@{/event/list}" method="post" class="row g-3 align-items-end">
                     <div class="col-md-3">
                         <label class="form-label small fw-semibold text-muted">比赛类别</label>
                         <select class="form-select" id="filter-category" name="category">
@@ -85,12 +85,18 @@
                                     <a th:href="@{/event/edit/{id}(id=${event.id})}" class="btn btn-sm btn-outline-primary me-1">
                                         <i class="fa-solid fa-pen-to-square"></i> 编辑
                                     </a>
-                                    <a th:if="${event.status != 2}" th:href="@{/event/finish/{id}(id=${event.id})}" class="btn btn-sm btn-outline-warning me-1" onclick="return confirm('确定要结束该比赛吗？结束后将不可再报名。')">
-                                        <i class="fa-solid fa-flag-checkered"></i> 结束
-                                    </a>
-                                    <a th:href="@{/event/delete/{id}(id=${event.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定要删除该项目吗？此操作不可恢复。')">
-                                        <i class="fa-solid fa-trash-can"></i> 删除
-                                    </a>
+                                    <form th:if="${event.status != 2}" th:action="@{/event/finish}" method="post" class="d-inline" onsubmit="return confirm('确定要结束该比赛吗？结束后将不可再报名。')">
+                                        <input type="hidden" name="id" th:value="${event.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-warning me-1">
+                                            <i class="fa-solid fa-flag-checkered"></i> 结束
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/event/delete}" method="post" class="d-inline" onsubmit="return confirm('确定要删除该项目吗？此操作不可恢复。')">
+                                        <input type="hidden" name="id" th:value="${event.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa-solid fa-trash-can"></i> 删除
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             <tr class="reg-row" th:if="${regMap.get(event.id) != null}" style="display:none; background-color:#f8fafc;">

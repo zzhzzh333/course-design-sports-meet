@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
 <head>
     <meta charset="UTF-8">
@@ -14,10 +14,10 @@
     <div layout:fragment="content">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
-                <div class="row g-3 align-items-end">
+                <form th:action="@{/report/event}" method="post" class="row g-3 align-items-end">
                     <div class="col-md-6">
                         <label class="form-label small fw-semibold text-muted">选择比赛项目</label>
-                        <select class="form-select" id="select-event">
+                        <select class="form-select" id="select-event" name="eventId">
                             <option value="">-- 请选择项目 --</option>
                             <option th:each="event : ${events}"
                                     th:value="${event.id}"
@@ -26,11 +26,11 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary w-100" id="btn-search">
+                        <button type="submit" class="btn btn-primary w-100" id="btn-search">
                             <i class="fa-solid fa-magnifying-glass me-1"></i>查询
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 
@@ -115,15 +115,6 @@
         </th:block>
     </div>
 
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    <script th:src="@{/js/app.js}"></script>
-    <script th:inline="javascript">
-        document.getElementById('btn-search').addEventListener('click', function() {
-            var eventId = document.getElementById('select-event').value;
-            if (eventId) {
-                window.location.href = /*[[@{/report/event}]]*/ '/report/event' + '?eventId=' + encodeURIComponent(eventId);
-            }
-        });
-    </script>
+
 </body>
 </html>

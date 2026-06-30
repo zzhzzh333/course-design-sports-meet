@@ -1,5 +1,6 @@
 package com.sportsmeet.controller;
 
+import com.sportsmeet.common.SecurityValidator;
 import com.sportsmeet.service.AthleteService;
 import com.sportsmeet.service.EventService;
 import com.sportsmeet.service.RegistrationService;
@@ -22,14 +23,16 @@ public class RegistrationController {
         this.eventService = eventService;
     }
 
-    @GetMapping("/list")
+    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST})
     public String list(@RequestParam(required = false) Long eventId,
                        @RequestParam(required = false) String keyword,
                        Model model) {
-        model.addAttribute("registrations", registrationService.findAll(eventId, keyword));
+        Long safeEventId = eventId == null ? null : SecurityValidator.validId(eventId, "项目编号");
+        String safeKeyword = SecurityValidator.cleanKeyword(keyword);
+        model.addAttribute("registrations", registrationService.findAll(safeEventId, safeKeyword));
         model.addAttribute("events", eventService.findAll(null, null));
-        model.addAttribute("eventId", eventId);
-        model.addAttribute("keyword", keyword);
+        model.addAttribute("eventId", safeEventId);
+        model.addAttribute("keyword", safeKeyword);
         return "registration/list";
     }
 
@@ -44,6 +47,8 @@ public class RegistrationController {
     public String register(@RequestParam Long athleteId,
                            @RequestParam Long eventId,
                            RedirectAttributes redirectAttributes) {
+        SecurityValidator.validId(athleteId, "运动员编号");
+        SecurityValidator.validId(eventId, "项目编号");
         try {
             registrationService.register(athleteId, eventId);
             redirectAttributes.addFlashAttribute("msg", "报名成功");
@@ -54,7 +59,14 @@ public class RegistrationController {
     }
 
     @GetMapping("/cancel/{id}")
-    public String cancel(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String cancelByGet(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", "取消报名必须通过页面按钮提交，不允许直接修改URL执行");
+        return "redirect:/registration/list";
+    }
+
+    @PostMapping("/cancel")
+    public String cancel(@RequestParam Long id, RedirectAttributes redirectAttributes) {
+        SecurityValidator.validId(id, "报名编号");
         registrationService.cancel(id);
         redirectAttributes.addFlashAttribute("msg", "报名已取消");
         return "redirect:/registration/list";

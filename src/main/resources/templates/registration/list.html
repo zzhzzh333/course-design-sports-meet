@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
     <div layout:fragment="content">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
-                <form th:action="@{/registration/list}" method="get" class="row g-3 align-items-end">
+                <form th:action="@{/registration/list}" method="post" class="row g-3 align-items-end">
                     <div class="col-md-3">
                         <label class="form-label small fw-semibold text-muted">报名项目</label>
                         <select class="form-select" id="select-event" name="eventId">
@@ -74,9 +74,12 @@
                                     <span class="badge rounded-pill" th:classappend="${reg.status == 0} ? 'bg-warning text-dark' : (${reg.status == 1} ? 'bg-primary' : 'bg-success')" th:text="${reg.status == 0} ? '已报名' : (${reg.status == 1} ? '已参赛' : '已完赛')">已报名</span>
                                 </td>
                                 <td class="text-center">
-                                    <a th:if="${reg.status == 0}" th:href="@{/registration/cancel/{id}(id=${reg.id})}" class="btn btn-sm btn-outline-danger" id="btn-cancel" onclick="return confirm('确定要取消该报名吗？此操作不可恢复。')">
-                                        <i class="fa-solid fa-ban"></i> 取消报名
-                                    </a>
+                                    <form th:if="${reg.status == 0}" th:action="@{/registration/cancel}" method="post" class="d-inline" onsubmit="return confirm('确定要取消该报名吗？此操作不可恢复。')">
+                                        <input type="hidden" name="id" th:value="${reg.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" id="btn-cancel">
+                                            <i class="fa-solid fa-ban"></i> 取消报名
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             <tr th:unless="${not #lists.isEmpty(registrations)}">

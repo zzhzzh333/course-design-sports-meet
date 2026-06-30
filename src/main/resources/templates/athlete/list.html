@@ -14,7 +14,7 @@
     <div layout:fragment="content">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
-                <form th:action="@{/athlete/list}" method="get" class="row g-3 align-items-end">
+                <form th:action="@{/athlete/list}" method="post" class="row g-3 align-items-end">
                     <div class="col-md-3">
                         <label class="form-label small fw-semibold text-muted">所属院系</label>
                         <select class="form-select" id="select-dept" name="deptId">
@@ -75,9 +75,12 @@
                                     <a th:href="@{/athlete/edit/{id}(id=${athlete.id})}" class="btn btn-sm btn-outline-primary me-1">
                                         <i class="fa-solid fa-pen-to-square"></i> 编辑
                                     </a>
-                                    <a th:href="@{/athlete/delete/{id}(id=${athlete.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定要删除该运动员吗？此操作不可恢复。')">
-                                        <i class="fa-solid fa-trash-can"></i> 删除
-                                    </a>
+                                    <form th:action="@{/athlete/delete}" method="post" class="d-inline" onsubmit="return confirm('确定要删除该运动员吗？此操作不可恢复。')">
+                                        <input type="hidden" name="id" th:value="${athlete.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa-solid fa-trash-can"></i> 删除
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             <tr th:unless="${not #lists.isEmpty(athletes)}">
