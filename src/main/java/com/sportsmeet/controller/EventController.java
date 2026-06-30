@@ -80,6 +80,10 @@ public class EventController {
             throw new BusinessException("比赛项目不存在");
         }
         eventService.update(event);
+        if (event.getStatus() == 2) {
+            redirectAttributes.addFlashAttribute("success", "项目已更新并标记为已结束，请录入该项目获奖运动员成绩");
+            return "redirect:/score/input/" + event.getId();
+        }
         redirectAttributes.addFlashAttribute("msg", "项目更新成功");
         return "redirect:/event/list";
     }
@@ -118,10 +122,14 @@ public class EventController {
         if (event == null) {
             throw new BusinessException("比赛项目不存在");
         }
+        if (event.getStatus() == 2) {
+            redirectAttributes.addFlashAttribute("error", "该比赛已结束，无需重复操作");
+            return "redirect:/event/list";
+        }
         event.setStatus(2);
         eventService.update(event);
-        redirectAttributes.addFlashAttribute("msg", "比赛已结束：" + event.getName());
-        return "redirect:/event/list";
+        redirectAttributes.addFlashAttribute("success", "比赛已结束：" + event.getName() + "，请录入该项目获奖运动员成绩");
+        return "redirect:/score/input/" + id;
     }
 
     private void validateEvent(Event event, boolean requireId) {

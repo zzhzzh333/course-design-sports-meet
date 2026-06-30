@@ -45,7 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         String gender = athlete.getGender();
         String category = event.getCategory();
-        if (!"混合".equals(category) && !category.equals(gender)) {
+        if (!"混合".equals(category) && !category.startsWith(gender)) {
             throw new RuntimeException("性别不符：该运动员(" + gender + ")不可报名" + category + "项目");
         }
         Registration exist = registrationMapper.findByAthleteAndEvent(athleteId, eventId);

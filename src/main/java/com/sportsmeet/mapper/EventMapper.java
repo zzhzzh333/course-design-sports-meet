@@ -16,4 +16,5 @@ public interface EventMapper {
     int countTotal();
     int countRegistrationByEventId(Long eventId);
     List<Event> findUpcoming(@Param("limit") int limit);
+    List<Event> findEndedWithoutScores();
 }

@@ -55,4 +55,9 @@ public class EventServiceImpl implements EventService {
     public List<Event> findUpcoming(int limit) {
         return eventMapper.findUpcoming(limit);
     }
+
+    @Override
+    public List<Event> findEndedWithoutScores() {
+        return eventMapper.findEndedWithoutScores();
+    }
 }

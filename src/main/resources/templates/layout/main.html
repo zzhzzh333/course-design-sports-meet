@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar" id="sidebar" th:classappend="${sidebarCollapsed} ? 'collapsed' : ''">
             <div class="sidebar-header">
                 <a href="/dashboard" class="text-decoration-none text-white">
                     <i class="fas fa-medal me-2"></i>

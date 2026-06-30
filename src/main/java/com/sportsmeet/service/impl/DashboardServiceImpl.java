@@ -32,6 +32,9 @@ public class DashboardServiceImpl implements DashboardService {
         summary.put("finishedEvents", eventService.countByStatus(2));
         List<Event> upcoming = eventService.findUpcoming(5);
         summary.put("upcomingEvents", upcoming);
+        List<Event> endedWithoutScores = eventService.findEndedWithoutScores();
+        summary.put("endedWithoutScores", endedWithoutScores);
+        summary.put("pendingScoreCount", endedWithoutScores.size());
         return summary;
     }
 }

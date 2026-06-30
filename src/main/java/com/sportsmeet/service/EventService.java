@@ -12,4 +12,5 @@ public interface EventService {
     int countTotal();
     int countByStatus(Integer status);
     List<Event> findUpcoming(int limit);
+    List<Event> findEndedWithoutScores();
 }

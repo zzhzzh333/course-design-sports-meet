@@ -40,4 +40,12 @@
     <select id="findUpcoming" resultType="com.sportsmeet.entity.Event">
         SELECT * FROM event WHERE status = 0 ORDER BY event_date, event_time LIMIT #{limit}
     </select>
+    <select id="findEndedWithoutScores" resultType="com.sportsmeet.entity.Event">
+        SELECT e.* FROM event e
+        LEFT JOIN score s ON e.id = s.event_id
+        WHERE e.status = 2
+        GROUP BY e.id
+        HAVING COUNT(s.id) = 0
+        ORDER BY e.event_date, e.event_time
+    </select>
 </mapper>
